@@ -65,5 +65,5 @@ return_action set_options(int argc, char** argv) {
 		settings::synced = true;
 	}
 	settings::colorset = str_to_cols(tmp_colorset_str);
-	return return_action::continue_work;
+	return return_action::continue_execution;
 }

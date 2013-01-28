@@ -91,7 +91,7 @@ struct settings{
 enum class return_action{
 	exit_succesfull,
 	exit_failed,
-	continue_work //this would be just 'continue', if that wouldn't be a keyword
+	continue_execution //this would be just 'continue', if that wouldn't be a keyword
 };
 
 /**

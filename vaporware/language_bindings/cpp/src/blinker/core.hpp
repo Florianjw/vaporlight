@@ -13,7 +13,7 @@
  * @brief Takes control of some LEDs and let's them fade in some random ways.
  * @param LEDs the IDs of the LEDs that will be controlled by this function
  */
-void control_LEDs(std::vector<uint16_t> LEDs);
+void control_LEDs(const std::vector<uint16_t>& led_list);
 
 /**
  * @brief fades some LEDs to a new color.
@@ -22,7 +22,7 @@ void control_LEDs(std::vector<uint16_t> LEDs);
  * @param old_color the old color
  * @param new_color the new color
  */
-void fade_to(const std::vector<uint16_t>& LEDs, 
+void fade_to(const std::vector<uint16_t>& led_list, 
 		useconds_t fade_time, const vlpp::rgba_color& old_color,
 		const vlpp::rgba_color& new_color);
 
@@ -31,7 +31,7 @@ void fade_to(const std::vector<uint16_t>& LEDs,
  * @param LEDs a vector that contains the LED-IDs
  * @param col the new color
  */
-void set_leds(std::vector<uint16_t> LEDs, const vlpp::rgba_color& col);
+void set_leds(const std::vector<uint16_t>& led_list, const vlpp::rgba_color& col);
 
 /**
  * @brief Returns a linear ratio between two colors, based on the ratio 

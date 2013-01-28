@@ -41,7 +41,7 @@
 int main(int argc, char** argv) {
 	using std::string;
 	
-	std::vector<uint16_t> LEDs;
+	std::vector<uint16_t> led_list;
 
 	// this try-block may not be the best style,
 	// but it is required to enforce stack-unwinding
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
 		signalhandling::init( {SIGINT});
 		
 		switch(set_options(argc, argv)){
-			case return_action::continue_work:
+			case return_action::continue_execution:
 				break;
 			case return_action::exit_succesfull:
 				return 0;
@@ -60,15 +60,17 @@ int main(int argc, char** argv) {
 				assert(false);
 		}
 		
-		LEDs = str_to_ids(settings::led_string);
+		led_list = str_to_ids(settings::led_string);
 		settings::client = vlpp::client(settings::server, settings::token, settings::port);
 		std::vector<std::thread> threads;
 		if (settings::synced) {
-			threads.emplace_back(control_LEDs, LEDs);
+			threads.emplace_back(control_LEDs, led_list);
+			threads.back().detach();
 		}
 		else {
-			for (auto LED : LEDs) {
+			for (auto LED : led_list) {
 				threads.emplace_back(control_LEDs, std::vector<uint16_t> {LED});
+				threads.back().detach();
 			}
 		}
 		
@@ -81,13 +83,13 @@ int main(int argc, char** argv) {
 			}
 			usleep(50000);
 		}
-		for (auto& thread : threads) {
-			thread.join();
-		}
+		//give the threads 0.5 seconds to terminate:
+		usleep(500000);
+		//threads that have not yet terminated will die now:
 		return 0;
 	}
 	catch (vlpp::connection_failure&) {
-		std::cerr << "Error: connection failure" << std::cerr;
+		std::cerr << "Error: connection failure" << std::endl;
 		return 2;
 	}
 	catch (std::runtime_error& e) {

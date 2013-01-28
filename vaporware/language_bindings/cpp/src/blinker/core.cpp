@@ -9,7 +9,7 @@
 
 #include <cstdio>
 
-void control_LEDs(std::vector<uint16_t> LEDs) {
+void control_LEDs(const std::vector<uint16_t>& led_list) {
 	// first set up the random-number-generators:
 	std::default_random_engine generator(
 		static_cast<unsigned long>(std::chrono::system_clock::now().time_since_epoch().count()) );
@@ -29,13 +29,13 @@ void control_LEDs(std::vector<uint16_t> LEDs) {
 		if(tmp == last_color){
 			continue;
 		}
-		fade_to(LEDs, fade_time_distribution(generator), last_color, tmp);
+		fade_to(led_list, fade_time_distribution(generator), last_color, tmp);
 		last_color = tmp;
 		usleep (sleep_time_distribution(generator));
 	}
 }
 
-void fade_to(const std::vector<uint16_t>& LEDs,
+void fade_to(const std::vector<uint16_t>& led_list,
 		useconds_t fade_time, const vlpp::rgba_color& old_color,
 		const vlpp::rgba_color& new_color){
 	useconds_t time_per_step = fade_time / settings::fade_steps;
@@ -50,10 +50,10 @@ void fade_to(const std::vector<uint16_t>& LEDs,
 			uint8_t(old_color.blue*p_old + new_color.blue*p_new),
 			uint8_t(old_color.alpha*p_old + new_color.alpha*p_new)
 		};
-		set_leds(LEDs, tmp);
+		set_leds(led_list, tmp);
 		usleep(time_per_step);
 	}
-	set_leds(LEDs, new_color);
+	set_leds(led_list, new_color);
 }
 
 std::pair<double, double> get_linear_color_ratio(int current_step, int total_steps){
@@ -61,11 +61,11 @@ std::pair<double, double> get_linear_color_ratio(int current_step, int total_ste
 	return {tmp, 1 - tmp};
 }
 
-void set_leds(std::vector<uint16_t> LEDs, const vlpp::rgba_color& col){
+void set_leds(const std::vector<uint16_t>& led_list, const vlpp::rgba_color& col){
 	static std::mutex m;
 	std::lock_guard<std::mutex> lock(m);
-	for(auto LED: LEDs){
-		settings::client.set_led(LED, col);
+	for(auto led: led_list){
+		settings::client.set_led(led, col);
 	}
 	settings::client.flush();
 }
