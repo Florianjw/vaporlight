@@ -16,42 +16,42 @@ struct sigaction signalhandling::handler_struct;
 extern "C" void signal_handler(int signal);
 
 
-void signalhandling::init(vector<int> sigs){
+void signalhandling::init(vector<int> sigs) {
 	signal.store(0);
 	handler_struct.sa_handler = signal_handler;
-	for(auto sig: sigs){
+	for (auto sig : sigs) {
 		sigaction(sig, &handler_struct, NULL);
 	}
 }
 
 
-int signalhandling::get_last_signal(){
+int signalhandling::get_last_signal() {
 	return signal.load();
 }
 
-int signalhandling::reset(){
+int signalhandling::reset() {
 	return signal.fetch_and(0);
 }
 
-void signalhandling::check(){
+void signalhandling::check() {
 	using std::to_string;
 	auto sig = signal.load();
-	if(sig){
+	if (sig) {
 		throw signal_exception("caught signal #" + to_string(sig), sig);
 	}
 }
 
-extern "C"{
-void signal_handler(int signal){
-	signalhandling::signal.store(signal);
-}
+extern "C" {
+	void signal_handler(int signal) {
+		signalhandling::signal.store(signal);
+	}
 }
 
-signal_exception::signal_exception(const std::string& what_arg, int sig_num):
+signal_exception::signal_exception(const std::string &what_arg, int sig_num):
 	std::runtime_error(what_arg),
-	_sig_num(sig_num){}
+	_sig_num(sig_num) {}
 
-int signal_exception::sig_num(){
+int signal_exception::sig_num() {
 	return _sig_num;
 }
 

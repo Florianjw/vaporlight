@@ -42,11 +42,10 @@ class vlpp::client::client_impl {
 
 
 //opcodes:
-enum:
-uint8_t {
-	OP_SET_LED = 0x01,
-	OP_AUTHENTICATE = 0x02,
-	OP_STROBE = 0xFF
+enum class opcodes: uint8_t {
+	SET_LED = 0x01,
+	AUTHENTICATE = 0x02,
+	STROBE = 0xFF
 };
 
 enum { TOKEN_SIZE = 16 };
@@ -133,9 +132,9 @@ void vlpp::client::client_impl::authenticate(const std::string &token) {
 		throw std::invalid_argument("invalid token (wrong size)");
 	}
 	std::array<char,TOKEN_SIZE+1> auth_data;
-	auth_data[0] = OP_AUTHENTICATE;
+	auth_data[0] = static_cast<char>(opcodes::AUTHENTICATE);
 	for (size_t i = 0; i < TOKEN_SIZE; ++i) {
-		auth_data[i+1] = (char)token[i];
+		auth_data[i+1] = static_cast<char>(token[i]);
 	}
 	boost::system::error_code e;
 	boost::asio::write(_socket, boost::asio::buffer(&(auth_data[0]), auth_data.size()) , e);
@@ -145,17 +144,17 @@ void vlpp::client::client_impl::authenticate(const std::string &token) {
 }
 
 void vlpp::client::client_impl::set_led(uint16_t led, rgba_color col) {
-	cmd_buffer.push_back((char)OP_SET_LED);
-	cmd_buffer.push_back((char)(led >> 8));
-	cmd_buffer.push_back((char)(led & 0xff));
-	cmd_buffer.push_back((char)col.r);
-	cmd_buffer.push_back((char)col.g);
-	cmd_buffer.push_back((char)col.b);
-	cmd_buffer.push_back((char)col.alpha);
+	cmd_buffer.push_back(static_cast<char>(opcodes::SET_LED));
+	cmd_buffer.push_back(static_cast<char>((led >> 8)));
+	cmd_buffer.push_back(static_cast<char>((led & 0xff)));
+	cmd_buffer.push_back(static_cast<char>(col.red));
+	cmd_buffer.push_back(static_cast<char>(col.green));
+	cmd_buffer.push_back(static_cast<char>(col.blue));
+	cmd_buffer.push_back(static_cast<char>(col.alpha));
 }
 
 void vlpp::client::client_impl::flush() {
-	cmd_buffer.push_back((char)OP_STROBE);
+	cmd_buffer.push_back(static_cast<char>(opcodes::STROBE));
 	boost::system::error_code e;
 	boost::asio::write(_socket, boost::asio::buffer(&(cmd_buffer[0]), cmd_buffer.size()), e);
 	cmd_buffer.clear();

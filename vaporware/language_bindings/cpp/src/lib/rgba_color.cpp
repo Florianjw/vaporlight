@@ -25,8 +25,8 @@
 //private function to convert two hex-characters to a byte:
 uint8_t hex_to_byte(char highbyte, char lowbyte);
 
-vlpp::rgba_color::rgba_color(uint8_t R, uint8_t G, uint8_t B, uint8_t A):
-	r(R), g(G), b(B), alpha(A)
+vlpp::rgba_color::rgba_color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha):
+	red(red), green(green), blue(blue), alpha(alpha)
 {}
 
 vlpp::rgba_color::rgba_color(std::string colorcode) {
@@ -38,9 +38,9 @@ vlpp::rgba_color::rgba_color(std::string colorcode) {
 			alpha = hex_to_byte(colorcode[6], colorcode[7]);
 			//fallthrough
 		case 6:
-			r = hex_to_byte(colorcode[0], colorcode[1]);
-			g = hex_to_byte(colorcode[2], colorcode[3]);
-			b = hex_to_byte(colorcode[4], colorcode[5]);
+			red = hex_to_byte(colorcode[0], colorcode[1]);
+			green = hex_to_byte(colorcode[2], colorcode[3]);
+			blue = hex_to_byte(colorcode[4], colorcode[5]);
 			break;
 		default:
 			throw std::invalid_argument("invalid colorcode");
@@ -49,9 +49,9 @@ vlpp::rgba_color::rgba_color(std::string colorcode) {
 
 
 bool vlpp::rgba_color::operator==(const rgba_color& other) const{
-	if(r != other.r) return false;
-	if(g != other.g) return false;
-	if(b != other.b) return false;
+	if(red != other.red) return false;
+	if(green != other.green) return false;
+	if(blue != other.blue) return false;
 	if(alpha != other.alpha) return false;
 	return true;
 }
@@ -67,22 +67,22 @@ bool vlpp::rgba_color::operator<(const rgba_color& other) const{
 	else if(alpha > other.alpha){
 		return false;
 	}
-	else if( r < other.r ) {
+	else if( red < other.red ) {
 		return true;
 	}
-	else if(r > other.r){
+	else if(red > other.red){
 		return false;
 	}
-	else if( g < other.g ) {
+	else if( green < other.green ) {
 		return true;
 	}
-	else if(g > other.g){
+	else if(green > other.green){
 		return false;
 	}
-	else if( b < other.b ) {
+	else if( blue < other.blue ) {
 		return true;
 	}
-	else if(b > other.b){
+	else if(blue > other.blue){
 		return false;
 	}
 	return false;
@@ -115,9 +115,9 @@ uint8_t hex_to_byte(char highbyte, char lowbyte) {
 
 std::ostream& operator<<(std::ostream& stream, const vlpp::rgba_color& col){
 	stream << "#" << std::hex << std::setfill('0') 
-	       << std::setw(2) << (int)col.r 
-	       << std::setw(2) << (int)col.g
-	       << std::setw(2) << (int)col.b
-	       << std::setw(2) << (int)col.alpha; 
+	       << std::setw(2) << static_cast<int>(col.red)
+	       << std::setw(2) << static_cast<int>(col.green)
+	       << std::setw(2) << static_cast<int>(col.blue)
+	       << std::setw(2) << static_cast<int>(col.alpha); 
 	return stream;
 }

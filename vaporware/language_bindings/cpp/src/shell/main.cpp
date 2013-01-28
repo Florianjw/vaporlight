@@ -62,7 +62,7 @@ int main(int argc, char**argv) {
 	vlpp::client client(server, token, port);
 	
 	string line;
-	std::map<string, string> argmap {
+	std::map<string, string> argmap = {
 		{"s", "set"},
 		{"a", "add"},
 		{"q", "quit"},

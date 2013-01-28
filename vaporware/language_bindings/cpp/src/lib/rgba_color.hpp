@@ -53,7 +53,7 @@ class rgba_color {
 		 * @param b the blue-value
 		 * @param alpha the alpha-value
 		 */
-		rgba_color(uint8_t r, uint8_t g, uint8_t b, uint8_t alpha = UINT8_MAX);
+		rgba_color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = UINT8_MAX);
 		
 		/**
 		 * @brief Constructs a color from a string.
@@ -89,17 +89,17 @@ class rgba_color {
 		/**
 		 * @brief the red-value
 		 */
-		uint8_t r = 0;
+		uint8_t red = 0;
 		
 		/**
 		 * @brief the green-value
 		 */
-		uint8_t g = 0;
+		uint8_t green = 0;
 		
 		/**
 		 * @brief the blue-value
 		 */
-		uint8_t b = 0;
+		uint8_t blue = 0;
 		
 		/**
 		 * @brief the alpha-value
@@ -119,3 +119,4 @@ std::ostream& operator<<(std::ostream& stream, const vlpp::rgba_color& col);
 
 
 #endif // RGBA_COLOR_HPP
+

@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <utility>
 
 #include <unistd.h>
 
@@ -32,6 +33,15 @@ void fade_to(const std::vector<uint16_t>& LEDs,
  */
 void set_leds(std::vector<uint16_t> LEDs, const vlpp::rgba_color& col);
 
+/**
+ * @brief Returns a linear ratio between two colors, based on the ratio 
+ * of the current step vs. the total number of steps.
+ * @param current_step the current step
+ * @param total_steps the total number of steps
+ * @return a pair of two ratios where the first one represents the share of the 
+ * old color and the second the share of the new color.
+ */
+std::pair<double, double> get_linear_color_ratio(int current_step, int total_steps);
 
 
 

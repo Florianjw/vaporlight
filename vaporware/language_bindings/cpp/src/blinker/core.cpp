@@ -40,13 +40,14 @@ void fade_to(const std::vector<uint16_t>& LEDs,
 		const vlpp::rgba_color& new_color){
 	useconds_t time_per_step = fade_time / settings::fade_steps;
 	for(int i=0; i < settings::fade_steps; ++i){
-		double p_new = double(i) / settings::fade_steps;
-		double p_old = 1 - p_new;
+		auto color_shares = settings::color_ratio_function(i, settings::fade_steps);
+		auto p_new = color_shares.first;
+		auto p_old = color_shares.second;
 		vlpp::rgba_color tmp{
 			// i really WANT this narrowing conversion:
-			uint8_t(old_color.r*p_old + new_color.r*p_new),
-			uint8_t(old_color.g*p_old + new_color.g*p_new),
-			uint8_t(old_color.b*p_old + new_color.b*p_new),
+			uint8_t(old_color.red*p_old + new_color.red*p_new),
+			uint8_t(old_color.green*p_old + new_color.green*p_new),
+			uint8_t(old_color.blue*p_old + new_color.blue*p_new),
 			uint8_t(old_color.alpha*p_old + new_color.alpha*p_new)
 		};
 		set_leds(LEDs, tmp);
@@ -55,6 +56,10 @@ void fade_to(const std::vector<uint16_t>& LEDs,
 	set_leds(LEDs, new_color);
 }
 
+std::pair<double, double> get_linear_color_ratio(int current_step, int total_steps){
+	double tmp = static_cast<double>(current_step) / total_steps;
+	return {tmp, 1 - tmp};
+}
 
 void set_leds(std::vector<uint16_t> LEDs, const vlpp::rgba_color& col){
 	static std::mutex m;

@@ -24,7 +24,7 @@
 #include <string>
 
 /**
- * @brief converts a string to a list of uint16_t
+ * @brief converts a string to a list of uint16_t, that may represent LED-IDs.
  * @param str the string
  * @return a vector of the numbers
  */
