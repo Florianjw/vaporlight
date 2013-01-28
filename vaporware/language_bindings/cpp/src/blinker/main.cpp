@@ -86,8 +86,9 @@ int main(int argc, char** argv) {
 		}
 		return 0;
 	}
-	catch (vlpp::connection_failure) {
-		
+	catch (vlpp::connection_failure&) {
+		std::cerr << "Error: connection failure" << std::cerr;
+		return 2;
 	}
 	catch (std::runtime_error& e) {
 		std::cerr << "Error: " << e.what() << std::endl;
