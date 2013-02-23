@@ -47,8 +47,6 @@ int main(int argc, char** argv) {
 	// but it is required to enforce stack-unwinding
 	// in the case of a runtime error:
 	try {
-		signalhandling::init( {SIGINT});
-		
 		switch(set_options(argc, argv)){
 			case return_action::continue_execution:
 				break;
@@ -73,6 +71,8 @@ int main(int argc, char** argv) {
 				threads.back().detach();
 			}
 		}
+		
+		signalhandling::init( {SIGINT});
 		
 		// wait until SIGINT arrives, than call the threads back:
 		// TODO: make this more robust

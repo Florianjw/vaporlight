@@ -1,5 +1,6 @@
 #include "settings.hpp"
 
+#include <iostream>
 #include <boost/program_options.hpp>
 
 #include "core.hpp"

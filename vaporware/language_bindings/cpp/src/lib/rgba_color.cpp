@@ -21,6 +21,7 @@
 #include <stdexcept>
 #include <cctype>
 #include <iomanip>
+#include <tuple>
 
 //private function to convert two hex-characters to a byte:
 uint8_t hex_to_byte(char highbyte, char lowbyte);
@@ -49,11 +50,8 @@ vlpp::rgba_color::rgba_color(std::string colorcode) {
 
 
 bool vlpp::rgba_color::operator==(const rgba_color& other) const{
-	if(red != other.red) return false;
-	if(green != other.green) return false;
-	if(blue != other.blue) return false;
-	if(alpha != other.alpha) return false;
-	return true;
+	return std::make_tuple(alpha, red, green, blue) == std::make_tuple(
+			other.alpha, other.red, other.green, other.blue);
 }
 
 bool vlpp::rgba_color::operator!=(const rgba_color& other) const{
@@ -61,31 +59,8 @@ bool vlpp::rgba_color::operator!=(const rgba_color& other) const{
 }
 
 bool vlpp::rgba_color::operator<(const rgba_color& other) const{
-	if( alpha < other.alpha ) {
-		return true;
-	}
-	else if(alpha > other.alpha){
-		return false;
-	}
-	else if( red < other.red ) {
-		return true;
-	}
-	else if(red > other.red){
-		return false;
-	}
-	else if( green < other.green ) {
-		return true;
-	}
-	else if(green > other.green){
-		return false;
-	}
-	else if( blue < other.blue ) {
-		return true;
-	}
-	else if(blue > other.blue){
-		return false;
-	}
-	return false;
+	return std::make_tuple(alpha, red, green, blue) < std::make_tuple(
+			other.alpha, other.red, other.green, other.blue);
 }
 
 
