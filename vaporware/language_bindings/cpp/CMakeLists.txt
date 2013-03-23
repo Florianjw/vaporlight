@@ -34,9 +34,14 @@ endif()
 option(BUILD_SHELL "build-shell" ON)
 option(BUILD_FADE "build-fade" ON)
 option(BUILD_BLINKER "build-blinker" ON)
+option(BUILD_STATIC "build-static linked binaries" OFF)
 
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
+
+if(BUILD_STATIC MATCHES ON)
+	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -static")
+endif()
 
 find_package(Boost COMPONENTS REQUIRED system thread program_options)
 find_package(Threads)

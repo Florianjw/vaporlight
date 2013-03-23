@@ -43,7 +43,7 @@ int main(int argc, char**argv) {
 	("verbose,v", "be verbose")
 	("token,t", bpo::value<std::string>(&token), "sets the authentication-token")
 	("server,s", bpo::value<std::string>(&server), "sets the servername")
-	("port, p", bpo::value<uint16_t>(&port)->default_value(vlpp::client::DEFAULT_PORT), "sets the server-port");
+	("port,p", bpo::value<uint16_t>(&port)->default_value(vlpp::client::DEFAULT_PORT), "sets the server-port");
 	
 	bpo::variables_map vm;
 	bpo::store(bpo::parse_command_line(argc, argv, desc) ,vm);
@@ -57,6 +57,11 @@ int main(int argc, char**argv) {
 		std::cout << "server = “" << server << "”\n"
 		          << "token = “" << token << "”\n"
 		          << "port = " << port << std::endl;
+	}
+	
+	if(token.length() != 16){
+		std::cout << "Error: invalid token-size: " << token.size() << std::endl;
+		return 1;
 	}
 	
 	vlpp::client client(server, token, port);
