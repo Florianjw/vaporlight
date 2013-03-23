@@ -25,7 +25,7 @@ void control_LEDs(const std::vector<uint16_t>& led_list) {
 		if(settings::thread_return_flag){
 			return;
 		}
-		vlpp::rgba_color tmp = settings::colorset[color_distribution(generator)];
+		vlpp::rgba_color tmp = settings::colorset.at(color_distribution(generator));
 		if(tmp == last_color){
 			continue;
 		}

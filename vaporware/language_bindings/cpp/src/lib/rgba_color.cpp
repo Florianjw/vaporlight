@@ -71,10 +71,10 @@ uint8_t hex_to_byte(char highbyte, char lowbyte) {
 	uint8_t returnval = 0;
 	
 	if (isdigit(highbyte)) {
-		returnval = ((unsigned char)highbyte - '0') * 0x10;
+		returnval = (highbyte - '0') * 0x10;
 	}
 	else {
-		returnval = (10 + (unsigned char)tolower(highbyte) -'a') * 0x10;
+		returnval = (10 + tolower(highbyte) -'a') * 0x10;
 	}
 	
 	if (isdigit(lowbyte)) {

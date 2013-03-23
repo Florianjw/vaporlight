@@ -96,5 +96,9 @@ int main(int argc, char** argv) {
 		std::cerr << "Error: " << e.what() << std::endl;
 		return 2;
 	}
+	catch (std::invalid_argument& e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+		return 2;
+	}
 }
 

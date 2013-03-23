@@ -9,7 +9,7 @@
 #include "../util/colors.hpp"
 
 std::string settings::server;
-std::string settings::token;
+std::string settings::token = "sixteen letters.";
 uint16_t settings::port;
 std::string settings::led_string;
 bool settings::synced = false;
@@ -18,7 +18,7 @@ useconds_t settings::min_sleep_time = 0;
 useconds_t settings::max_sleep_time = 100000;
 useconds_t settings::min_fade_time  = 0;
 useconds_t settings::max_fade_time  = 100000;
-std::vector<vlpp::rgba_color> settings::colorset = REAL_COLORS;
+std::vector<vlpp::rgba_color> settings::colorset;
 vlpp::client settings::client;
 std::atomic<bool> settings::thread_return_flag(false);
 std::function<std::pair<double,double>(int, int)> settings::color_ratio_function = get_linear_color_ratio;
@@ -38,7 +38,7 @@ return_action set_options(int argc, char** argv) {
 		("server,s", value<std::string>(&settings::server), "sets the servername")
 		("port,p", value<uint16_t>(&settings::port)->default_value(vlpp::client::DEFAULT_PORT),
 		 "sets the server-port")
-		("leds,l", value<std::string>(&settings::led_string), "sets the number of leds")
+		("leds,l", value<std::string>(&settings::led_string), "sets the used leds")
 		("min-sleep", value<useconds_t>(&settings::min_sleep_time),
 		 "changes the minimum sleep-time")
 		("max-sleep,S", value<useconds_t>(&settings::max_sleep_time),
@@ -66,5 +66,10 @@ return_action set_options(int argc, char** argv) {
 		settings::synced = true;
 	}
 	settings::colorset = str_to_cols(tmp_colorset_str);
+	if(settings::colorset.size() <= 0){
+		settings::colorset = REAL_COLORS;
+	}
+
+
 	return return_action::continue_execution;
 }
