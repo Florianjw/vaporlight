@@ -2,24 +2,12 @@ project(vaporpp)
 cmake_minimum_required(VERSION 2.8)
 
 #we need C++11:
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Werror" )
-
-
-#Get as many warnings as possible:
-if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-	message("using g++")
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic" )
-elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	message("using clang++")
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic" )
-else()
-	message("unknown compiler")
-endif()
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Werror -Wold-style-cast -Wextra -pedantic" )
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
 	message("creating Debug-Version")
 	add_definitions( -DDEBUG )
-	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g" )
+	set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -fsanitize=address -fno-omit-frame-pointer" )
 elseif(CMAKE_BUILD_TYPE MATCHES "Release")
 	message("creating Release-Version")
 	add_definitions( -DNDEBUG )
