@@ -85,7 +85,7 @@ int main(int argc, char**argv) {
 		double color_degree;
 		while(true){
 			color_degree_counter += UINT8_MAX/4;
-			color_degree = (double)color_degree_counter / UINT16_MAX;
+			color_degree = static_cast<double>(color_degree_counter) / UINT16_MAX;
 			vlpp::rgba_color tmp = calc_deg_color(color_degree);
 			//std::cout << tmp << std::endl;
 			tmp.alpha = alpha;
@@ -93,7 +93,7 @@ int main(int argc, char**argv) {
 				client.set_led(id,tmp);
 			}
 			client.flush();
-			usleep( (useconds_t)(1000000*timestep) );
+			usleep( static_cast<useconds_t>((1000000*timestep)));
 		}
 	}
 	catch(std::exception& e){
