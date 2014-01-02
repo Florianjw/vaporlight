@@ -1,3 +1,6 @@
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
+
 /*
  *  This file is part of vaporpp.
  *
@@ -14,10 +17,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with vaporpp.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-
-#ifndef CLIENT_HPP
-#define CLIENT_HPP
 
 #include <vector>
 #include <string>
@@ -38,121 +37,104 @@ namespace vlpp {
  * Note that using this class is NOT threadsafe.
  */
 class client {
-	public:
-
-		/**
-		 * @brief the default port
-		 */
-		enum : uint16_t { DEFAULT_PORT = 7534 };
-
-		/**
-		 * @brief the default constructor.
-		 *
-		 * Note that this is not properly constructed afterwards, so any
-		 * attempt of using it will result in a vlpp::uninitialized_error
-		 * beeing thrown.
-		 *
-		 */
-		client() = default;
-
-		/**
-		 * @brief Constructs an instance, connects to the specified server and authenticates there.
-		 * @param server the servername; this might be an ip-address or an hostname,
-		 *               eg "192.168.23.44" or "example.com"
-		 * @param token the authentication-token
-		 * @param port the server-port
-		 * @throws std::invalid_argument if the token has an invalid size
-		 * @throws vlpp::connection_failure if no connection could be created or a write fails
-		 */
-		client(const std::string &server, const std::string &token, uint16_t port = DEFAULT_PORT);
-
-		/**
-		 * @brief move-ctor
-		 * @param other an rvalue-reference to another instance
-		 */
-		client(client && other);
-
-		/**
-		 * @brief Asigns an rvalue-instance to this.
-		 * @param the rvalue-instance
-		 * @return a reference to *this
-		 */
-		client &operator=(client && other);
-
-		/**
-		 * @brief cleans up the object.
-		 */
-		virtual ~client();
-
-		/**
-		 * @brief authenticate at the server
-		 * @param token the authentication-token
-		 * @throws std::invalid_argument if the token has an invalid size
-		 * @throws vlpp::uninitialized_error if this is not initialized correctly
-		 */
-		void authenticate(const std::string &token);
-
-		/**
-		 * @brief Sets a rgb-LED to a specific rgba-color.
-		 * @param led_id the ID of the led
-		 * @param col the new color of the LED
-		 * @throws vlpp::uninitialized_error if this is not initialized correctly
-		 */
-		void set_led(uint16_t led_id, const rgba_color &col);
-
-		/**
-		 * @brief Sets a list of LEDs to a specific color.
-		 * @param led_ids the IDs of the LEDs
-		 * @param col the new color of the LEDs
-		 * @throws vlpp::uninitialized_error if this is not initialized correctly
-		 */
-		void set_leds(const std::vector<uint16_t> &led_ids, const rgba_color &col);
-
-		/**
-		 * @brief execute the sent commands
-		 * @throws std::runtime_error if the write fails
-		 * @throws vlpp::uninitialized_error if this is not initialized correctly
-		 */
-		void flush();
-
-	protected:
-		/**
-		 * @brief Gives you direct access to the internal buffer. NEVER use this, unless
-		 *        you REALLY know what you are doing.
-		 * @return a reference to the internal buffer.
-		 * @throws vlpp::uninitialized_error if this is not initialized correctly
-		 */
-		std::vector<char> &access_buffer();
-
-	private:
-		// we are using the pimpl-idiom to decrease the
-		// compiletime and dependencies for users of this class:
-		class client_impl;
-		client_impl *_impl;
+public:
+	
+	/**
+	 * @brief the default port
+	 */
+	enum : uint16_t { DEFAULT_PORT = 7534 };
+	
+	/**
+	 * @brief the default constructor.
+	 *
+	 * Note that this is not properly constructed afterwards, so any
+	 * attempt of using it will result in a vlpp::uninitialized_error
+	 * beeing thrown.
+	 *
+	 */
+	client() = default;
+	
+	/**
+	 * @brief Constructs an instance, connects to the specified server and authenticates there.
+	 * @param server the servername; this might be an ip-address or an hostname,
+	 *               eg "192.168.23.44" or "example.com"
+	 * @param token the authentication-token
+	 * @param port the server-port
+	 * @throws std::invalid_argument if the token has an invalid size
+	 * @throws vlpp::connection_failure if no connection could be created or a write fails
+	 */
+	client(const std::string &server, const std::string &token, uint16_t port = DEFAULT_PORT);
+	
+	
+	client(const client&) = delete;
+	client(client&&) = default;
+	
+	client &operator=(const client&) = delete;
+	client &operator=(client&&) = default;
+	
+	/**
+	 * @brief authenticate at the server
+	 * @param token the authentication-token
+	 * @throws std::invalid_argument if the token has an invalid size
+	 * @throws vlpp::uninitialized_error if this is not initialized correctly
+	 */
+	void authenticate(const std::string &token);
+	
+	/**
+	 * @brief Sets a rgb-LED to a specific rgba-color.
+	 * @param led_id the ID of the led
+	 * @param col the new color of the LED
+	 * @throws vlpp::uninitialized_error if this is not initialized correctly
+	 */
+	void set_led(uint16_t led_id, const rgba_color &col);
+	
+	/**
+	 * @brief Sets a list of LEDs to a specific color.
+	 * @param led_ids the IDs of the LEDs
+	 * @param col the new color of the LEDs
+	 * @throws vlpp::uninitialized_error if this is not initialized correctly
+	 */
+	void set_leds(const std::vector<uint16_t> &led_ids, const rgba_color &col);
+	
+	/**
+	 * @brief execute the sent commands
+	 * @throws std::runtime_error if the write fails
+	 * @throws vlpp::uninitialized_error if this is not initialized correctly
+	 */
+	void flush();
+	
+protected:
+	/**
+	 * @brief Gives you direct access to the internal buffer. NEVER use this, unless
+	 *        you REALLY know what you are doing.
+	 * @return a reference to the internal buffer.
+	 * @throws vlpp::uninitialized_error if this is not initialized correctly
+	 */
+	std::vector<char> &access_buffer();
+	
+private:
+	// we are using the pimpl-idiom to decrease the
+	// compiletime and dependencies for users of this class:
+	class client_impl;
+	// Since std::unique_ptr doesn't work, use a std::shared_ptr though we never share
+	// (might be a bug in libstdc++):
+	std::shared_ptr<client_impl> _impl;
 };
 
 /**
  * @brief Exception that will be thrown if the connection fails
  */
 class connection_failure : public std::runtime_error {
-	public:
-		/**
-		 * @brief The usual exception ctor.
-		 * @param msg the error-message
-		 */
-		connection_failure(const std::string &msg) : std::runtime_error(msg) {}
+public:
+	using std::runtime_error::runtime_error;
 };
 
 /**
  * @brief Exception to be thrown if an object is used uninitialized
  */
 class uninitialized_error : public std::logic_error {
-	public:
-		/**
-		 * @brief The usual exception ctor.
-		 * @param msg the error-message
-		 */
-		uninitialized_error(const std::string &msg) : std::logic_error(msg) {}
+public:
+	using std::logic_error::logic_error;
 };
 
 }//namespace vlpp

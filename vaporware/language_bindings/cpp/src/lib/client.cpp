@@ -54,25 +54,8 @@ enum { TOKEN_SIZE = 16 };
 
 
 vlpp::client::client(const std::string &server, const std::string &token, uint16_t port):
-	_impl(new vlpp::client::client_impl(server, token, port)) {
+	_impl(std::make_shared<vlpp::client::client_impl>(server, token, port)) {
 }
-
-vlpp::client::client(client&& other){
-	_impl = other._impl;
-	other._impl = nullptr;
-}
-
-vlpp::client& vlpp::client::operator=(client&& other){
-	std::swap(_impl, other._impl);
-	return *this;
-}
-
-vlpp::client::~client() {
-	if( _impl ){
-		delete _impl;
-	}
-}
-
 
 void vlpp::client::authenticate(const std::string& token){
 	if(!_impl){
